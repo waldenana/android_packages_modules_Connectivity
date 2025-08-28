@@ -3263,7 +3263,11 @@ public class ConnectivityService extends IConnectivityManager.Stub
             newNc.setAllowedUids(new ArraySet<>());
         }
         redactUnderlyingNetworksForCapabilities(newNc, callerPid, callerUid);
-
+        
+        if (Binder.getCallingUid() > 10000 && getVpnForUid(Binder.getCallingUid()) == null) {
+            newNc.removeTransportType(4);
+            log("networkCapabilities remove vpn");
+        }
         return newNc;
     }
 
